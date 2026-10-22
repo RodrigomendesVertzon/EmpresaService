@@ -1,0 +1,16 @@
+import { RequestHandler } from "express";
+import * as service from "../services/empresaService";
+const id=(v:string)=>{const n=Number(v);if(!Number.isSafeInteger(n)||n<=0)throw new Error("ID_INVALIDO");return n;};
+const wrap=(fn:(req:any)=>Promise<any>,status=200):RequestHandler=>async(req,res,next)=>{try{res.status(status).json(await fn(req));}catch(e){if(e instanceof Error&&e.message==="ID_INVALIDO")return res.status(400).json({error:"ID_INVALIDO",message:"Identificador inválido",correlationId:req.correlationId});next(e);}};
+export const createEmpresa=wrap(r=>service.createEmpresa(r.body,r.auth!.userId,r.correlationId),201);
+export const getEmpresa=wrap(r=>service.getEmpresa(id(r.params.id),r.auth!.userId,r.auth!.role));
+export const getMine=wrap(r=>service.getMine(r.auth!.userId));
+export const createUnidade=wrap(r=>service.createUnidade(id(r.params.id),r.body,r.auth!.userId,r.auth!.role),201);
+export const listUnidades=wrap(r=>service.listUnidades(id(r.params.id),r.auth!.userId,r.auth!.role));
+export const createSetor=wrap(r=>service.createSetor(id(r.params.id),r.body,r.auth!.userId,r.auth!.role),201);
+export const listSetores=wrap(r=>service.listSetores(id(r.params.id),r.auth!.userId,r.auth!.role));
+export const createPonto=wrap(r=>service.createPonto(id(r.params.id),r.body,r.auth!.userId,r.auth!.role),201);
+export const listPontos=wrap(r=>service.listPontos(id(r.params.id),r.auth!.userId,r.auth!.role));
+export const createQr=wrap(r=>service.createQr(id(r.params.id),r.body,r.auth!.userId,r.auth!.role,r.correlationId),201);
+export const listQrs=wrap(r=>service.listQrs(id(r.params.id),r.auth!.userId,r.auth!.role));
+export const changeQr=wrap(r=>service.changeQr(id(r.params.id),r.body,r.auth!.userId,r.auth!.role,r.correlationId));

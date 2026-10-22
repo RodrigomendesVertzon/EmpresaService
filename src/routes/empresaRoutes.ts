@@ -1,0 +1,18 @@
+import { Router } from "express";
+import * as c from "../controllers/empresaController";
+import { authenticate } from "../middlewares/auth";
+import { requireRole } from "../middlewares/requireRole";
+export const empresaRoutes=Router();
+empresaRoutes.use(authenticate);
+empresaRoutes.post("/empresas",requireRole("ADMIN_PLATAFORMA"),c.createEmpresa);
+empresaRoutes.get("/empresas/me",requireRole("ADMIN_EMPRESA","GERENTE"),c.getMine);
+empresaRoutes.get("/empresas/:id",requireRole("ADMIN_PLATAFORMA","ADMIN_EMPRESA","GERENTE"),c.getEmpresa);
+empresaRoutes.post("/empresas/:id/unidades",requireRole("ADMIN_PLATAFORMA","ADMIN_EMPRESA"),c.createUnidade);
+empresaRoutes.get("/empresas/:id/unidades",requireRole("ADMIN_PLATAFORMA","ADMIN_EMPRESA","GERENTE"),c.listUnidades);
+empresaRoutes.post("/unidades/:id/setores",requireRole("ADMIN_PLATAFORMA","ADMIN_EMPRESA"),c.createSetor);
+empresaRoutes.get("/unidades/:id/setores",requireRole("ADMIN_PLATAFORMA","ADMIN_EMPRESA","GERENTE"),c.listSetores);
+empresaRoutes.post("/setores/:id/pontos",requireRole("ADMIN_PLATAFORMA","ADMIN_EMPRESA"),c.createPonto);
+empresaRoutes.get("/setores/:id/pontos",requireRole("ADMIN_PLATAFORMA","ADMIN_EMPRESA","GERENTE"),c.listPontos);
+empresaRoutes.post("/pontos/:id/qrcodes",requireRole("ADMIN_PLATAFORMA","ADMIN_EMPRESA"),c.createQr);
+empresaRoutes.get("/pontos/:id/qrcodes",requireRole("ADMIN_PLATAFORMA","ADMIN_EMPRESA","GERENTE"),c.listQrs);
+empresaRoutes.patch("/qrcodes/:id/status",requireRole("ADMIN_PLATAFORMA","ADMIN_EMPRESA"),c.changeQr);
