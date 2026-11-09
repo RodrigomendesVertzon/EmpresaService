@@ -9,6 +9,7 @@ import { errorHandler } from "./middlewares/errorHandler";
 import { notFound } from "./middlewares/notFound";
 import { healthRoutes } from "./routes/healthRoutes";
 import { empresaRoutes } from "./routes/empresaRoutes";
+import internalQrRoutes from "./routes/internalQrRoutes";
 export const app=express();
 app.disable("x-powered-by");
 app.use(correlationId);
@@ -18,5 +19,6 @@ app.use(cors({origin:env.CORS_ORIGIN.split(",").map(v=>v.trim()),credentials:tru
 app.use(express.json({limit:"1mb"}));
 app.use("/health",healthRoutes);
 app.use("/v1",empresaRoutes);
+app.use("/v1/internal", internalQrRoutes);
 app.use(notFound);
 app.use(errorHandler);
